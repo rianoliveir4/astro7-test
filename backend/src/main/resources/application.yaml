@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: appointment-api
+  threads:
+    virtual:
+      enabled: true
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  docker:
+    compose:
+      lifecycle-management: start-only
+
+appointment:
+  protocol:
+    base-url: https://httpbin.org
+    path: /uuid
+    connect-timeout: 2s
+    read-timeout: 5s
+  processing:
+    max-attempts: 5
+    initial-backoff: 5s
+    batch-size: 20
+    max-concurrent-requests: 10
+    stuck-timeout: 2m
+  job:
+    interval: 5s
+  cors:
+    allowed-origins:
+      - http://localhost:3000

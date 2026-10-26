@@ -1,0 +1,22 @@
+Desafio Full Stack.pdf
+
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+
+.DS_Store
+Thumbs.db
+desktop.ini
+
+.env
+.env.local
+.env.*.local
+*.log
+
+node_modules/
+.next/
+out/
+next-env.d.ts
+*.tsbuildinfo
