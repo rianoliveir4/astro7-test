@@ -6,12 +6,14 @@ Aplicação para abertura de atendimentos de uma clínica. O paciente informa no
 |---|---|
 | Backend | Java 25, Spring Boot 4.1, Spring Data JPA, Flyway, Bean Validation |
 | Banco | MySQL 8.4 (Docker) |
-| Frontend | Next.js + React + TypeScript |
-| Testes | JUnit 5, Mockito, MockMvc, Testcontainers, Awaitility |
+| Frontend | Next.js 16, React 19, TypeScript, Tailwind CSS 4, TanStack Query, React Hook Form, Zod |
+| Testes | Backend: JUnit 5, Mockito, MockMvc, Testcontainers, Awaitility · Frontend: Vitest, Testing Library |
 
 ## Como rodar
 
-Pré-requisitos: **Java 25** e **Docker** em execução.
+Pré-requisitos: **Java 25**, **Node 24** e **Docker** em execução.
+
+**Backend**
 
 ```bash
 cd backend
@@ -20,12 +22,24 @@ cd backend
 
 O Spring Boot sobe o MySQL automaticamente a partir do `compose.yaml` e o Flyway cria a tabela. A API fica em `http://localhost:8080`.
 
-Testes (os de integração sobem um MySQL descartável via Testcontainers):
+**Frontend**
 
 ```bash
-cd backend
-./mvnw test
+cd frontend
+npm install
+npm run dev
 ```
+
+A aplicação fica em `http://localhost:3000`. Para apontar para outra API, copie `.env.example` para `.env.local` e ajuste `NEXT_PUBLIC_API_URL`.
+
+**Testes**
+
+```bash
+cd backend && ./mvnw test
+cd frontend && npm test
+```
+
+Os testes de integração do backend sobem um MySQL descartável via Testcontainers.
 
 ## Fluxo
 
@@ -91,6 +105,25 @@ Exemplo de resposta:
 - **Regras de negócio na entidade.** `Appointment` concentra as transições de status (`complete`, `registerFailure`), impedindo estados inválidos.
 - **Novo atendimento após concluir.** Um CPF só pode ter um atendimento ativo (`PENDING`/`PROCESSING`). Após `COMPLETED` ou `FAILED`, um novo pode ser aberto.
 - **Schema versionado com Flyway** e `ddl-auto: validate`: o Hibernate apenas valida o schema, nunca o altera.
+
+## Frontend
+
+Uma única página no estilo de sistema de recepção: formulário no topo, resumo com a contagem por status e a tabela dos atendimentos em acompanhamento (vira lista no celular), com indicação de atualização automática.
+
+- **Validação no cliente** com Zod: nome obrigatório (3 a 150 caracteres) e CPF com máscara e dígito verificador. Erros `400` do backend também são exibidos no campo correspondente.
+- **Polling com TanStack Query**: uma única requisição `GET /api/appointments?ids=...` atualiza todos os atendimentos a cada 2 segundos e para sozinha quando nenhum está `PENDING` ou `PROCESSING`. Se a conexão cair, os últimos dados continuam na tela com um aviso de reconexão.
+- **Status de cada atendimento**: aguardando, processando, concluído (com o protocolo e opção de copiar) e falhou. Falhas temporárias mostram o número da próxima tentativa. A cor é usada apenas para comunicar o status.
+- **Vários pacientes ao mesmo tempo**: os ids acompanhados ficam no `localStorage`, então a lista sobrevive a um recarregamento da página.
+- **Novo atendimento**: atendimentos concluídos ou com falha oferecem "Novo atendimento", que preenche o formulário com o mesmo paciente. Se o CPF já tiver um atendimento ativo (`409`), ele é destacado na lista.
+
+```
+frontend/src/
+├── app/          layout, página e provider do TanStack Query
+├── components/   formulário, resumo por status, tabela, linha do atendimento e status
+├── hooks/        polling dos atendimentos e ids no localStorage
+├── lib/          cliente da API e utilitários de CPF
+└── types/        tipos da API
+```
 
 ## Configuração
 
