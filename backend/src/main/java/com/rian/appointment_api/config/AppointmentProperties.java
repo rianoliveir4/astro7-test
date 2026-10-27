@@ -2,21 +2,19 @@ package com.rian.appointment_api.config;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import java.time.Duration;
-import java.util.List;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
 @Validated
 @ConfigurationProperties("appointment")
 public record AppointmentProperties(
+        @NotBlank String frontendUrl,
         @Valid @NotNull Protocol protocol,
         @Valid @NotNull Processing processing,
-        @Valid @NotNull Job job,
-        @Valid @NotNull Cors cors) {
+        @Valid @NotNull Job job) {
 
     public record Protocol(
             @NotBlank String baseUrl,
@@ -29,13 +27,9 @@ public record AppointmentProperties(
             @Positive int maxAttempts,
             @NotNull Duration initialBackoff,
             @Positive int batchSize,
-            @Positive int maxConcurrentRequests,
             @NotNull Duration stuckTimeout) {
     }
 
     public record Job(@NotNull Duration interval) {
-    }
-
-    public record Cors(@NotEmpty List<String> allowedOrigins) {
     }
 }

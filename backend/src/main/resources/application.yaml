@@ -13,6 +13,7 @@ spring:
       lifecycle-management: start-only
 
 appointment:
+  frontend-url: http://localhost:3000
   protocol:
     base-url: https://httpbin.org
     path: /uuid
@@ -22,10 +23,6 @@ appointment:
     max-attempts: 5
     initial-backoff: 5s
     batch-size: 20
-    max-concurrent-requests: 10
     stuck-timeout: 2m
   job:
     interval: 5s
-  cors:
-    allowed-origins:
-      - http://localhost:3000
