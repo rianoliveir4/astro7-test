@@ -34,7 +34,7 @@ describe("AppointmentRow", () => {
   it("shows pending appointments with masked CPF and no actions", () => {
     renderAppointmentRow(pendingAppointment);
 
-    expect(screen.getByText("Aguardando")).toBeInTheDocument();
+    expect(screen.getByText("Aguardando processamento")).toBeInTheDocument();
     expect(screen.getByText("***.982.247-**")).toBeInTheDocument();
     expect(screen.queryByRole("button")).not.toBeInTheDocument();
   });
@@ -42,7 +42,8 @@ describe("AppointmentRow", () => {
   it("shows the next attempt when a previous attempt failed", () => {
     renderAppointmentRow({ ...pendingAppointment, attemptCount: 2 });
 
-    expect(screen.getByText("Aguardando · tentativa 3")).toBeInTheDocument();
+    expect(screen.getByText("Aguardando processamento")).toBeInTheDocument();
+    expect(screen.getByText("Tentativa 3")).toBeInTheDocument();
   });
 
   it("shows processing appointments", () => {

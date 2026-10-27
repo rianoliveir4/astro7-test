@@ -6,7 +6,7 @@ export const statusAppearance: Record<
   { label: string; pluralLabel: string; dotClassName: string; badgeClassName: string }
 > = {
   PENDING: {
-    label: "Aguardando",
+    label: "Aguardando processamento",
     pluralLabel: "Aguardando",
     dotClassName: "bg-amber-500",
     badgeClassName: "bg-amber-50 text-amber-800",
@@ -36,15 +36,20 @@ export function AppointmentStatus({ appointment }: { appointment: Appointment })
   const isRetrying = appointment.status === "PENDING" && appointment.attemptCount > 0;
 
   return (
-    <span
-      className={`inline-flex items-center gap-1.5 rounded-md px-2 py-0.5 text-xs font-medium whitespace-nowrap ${badgeClassName}`}
-    >
-      {appointment.status === "PROCESSING" ? (
-        <LoaderCircle className="size-3 animate-spin" aria-hidden />
-      ) : (
-        <span className={`size-1.5 rounded-full ${dotClassName}`} aria-hidden />
+    <span className="inline-flex flex-col gap-1 max-md:items-end">
+      <span
+        className={`inline-flex items-center gap-1.5 rounded-md px-2 py-0.5 text-xs font-medium whitespace-nowrap ${badgeClassName}`}
+      >
+        {appointment.status === "PROCESSING" ? (
+          <LoaderCircle className="size-3 animate-spin" aria-hidden />
+        ) : (
+          <span className={`size-1.5 rounded-full ${dotClassName}`} aria-hidden />
+        )}
+        {label}
+      </span>
+      {isRetrying && (
+        <span className="text-xs text-zinc-500">Tentativa {appointment.attemptCount + 1}</span>
       )}
-      {isRetrying ? `${label} · tentativa ${appointment.attemptCount + 1}` : label}
     </span>
   );
 }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatCpf, isValidCpf, maskCpf } from "./cpf";
+import { formatCpf, isValidCpf, maskCpf } from "@/lib/cpf";
 
 describe("formatCpf", () => {
   it("formats a complete CPF", () => {

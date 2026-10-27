@@ -9,7 +9,7 @@ import type { Appointment, PatientData } from "@/types/appointment";
 const COPY_FEEDBACK_DURATION_MS = 2000;
 
 export const appointmentGridColumns =
-  "md:grid-cols-[minmax(0,1.4fr)_8.5rem_4.5rem_11rem_minmax(0,2fr)_10rem]";
+  "md:grid-cols-[minmax(0,1.4fr)_8.5rem_4.5rem_12.5rem_minmax(0,2fr)_10rem]";
 
 type AppointmentRowProps = {
   appointment: Appointment;

@@ -112,7 +112,7 @@ Uma única página no estilo de sistema de recepção: formulário no topo, resu
 
 - **Validação no cliente** com Zod: nome obrigatório (3 a 150 caracteres) e CPF com máscara e dígito verificador. Erros `400` do backend também são exibidos no campo correspondente.
 - **Polling com TanStack Query**: uma única requisição `GET /api/appointments?ids=...` atualiza todos os atendimentos a cada 2 segundos e para sozinha quando nenhum está `PENDING` ou `PROCESSING`. Se a conexão cair, os últimos dados continuam na tela com um aviso de reconexão.
-- **Status de cada atendimento**: aguardando, processando, concluído (com o protocolo e opção de copiar) e falhou. Falhas temporárias mostram o número da próxima tentativa. A cor é usada apenas para comunicar o status.
+- **Status de cada atendimento**: aguardando processamento, processando, concluído (com o protocolo e opção de copiar) e falhou. Falhas temporárias mostram o número da próxima tentativa. A cor é usada apenas para comunicar o status.
 - **Vários pacientes ao mesmo tempo**: os ids acompanhados ficam no `localStorage`, então a lista sobrevive a um recarregamento da página.
 - **Novo atendimento**: atendimentos concluídos ou com falha oferecem "Novo atendimento", que preenche o formulário com o mesmo paciente. Se o CPF já tiver um atendimento ativo (`409`), ele é destacado na lista.
 
@@ -123,6 +123,8 @@ frontend/src/
 ├── hooks/        polling dos atendimentos e ids no localStorage
 ├── lib/          cliente da API e utilitários de CPF
 └── types/        tipos da API
+
+frontend/tests/   testes (Vitest + Testing Library), espelhando a estrutura de src/
 ```
 
 ## Configuração
